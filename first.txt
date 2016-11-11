@@ -1,1 +1,23 @@
 this is my first github,thank you for you visit! 2016年11月11日12:08:36
+
+第一次用github，都有点小激动。。。。  我用的是windows版本的,下载软件后可以像linux一样有shell环境
+
+1 安装git---- 
+<a href='https://git-scm.com/downloads/'>下载 https://git-scm.com/downloads/</a>
+
+
+2 配置你的用户名和邮箱-----第一次要配置，后面都不用了
+$ git config --global user.name "Your Name"
+$ git config --global user.email "email@example.com"
+
+
+3 创建版本库
+随便在哪个盘新建一个文件夹(路径最后不要有中文),比如 F:/git 然后  git init
+
+
+4 git status  查看情况 告诉你有文件被修改过
+  git add test.txt    把test.txt 加入到
+  git commit -m "注释"
+  git diff可以查看修改内容
+  git log 告诉我们历史记录
+
