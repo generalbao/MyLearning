@@ -1,0 +1,178 @@
+   源码包安装lamp.txt  2016年11月12日14:46:47
+搭建LAMP环境时，需要安装的所有软件都要按照一定的顺序安装：apache->mysql->php。但是在安装php之前，应该先安装php5需要的最新版本文库文件。安装GD2库是为
+了让php支持gif，png和jpeg图片格式，所以在安装GD2库之前还要先安装最新的zlib，libpng，freetype和jpegsrc等库文件。而且中间还会穿插安装一些软件。
+
+1 下载所需要的软件源码包  全部先放着 /usr/local/lamp 下面，各自建议安装在 /usr/local/    比如  /usr/local/httpd /usr/local/mysql /usr/loca/php 
+cd /usr/local 
+mkdir lamp
+cd lamp
+
+wget xxx 
+wget httpd-2.2.9.tar.gz http://www.apache.org/
+mysql-5.0.41.tar.gz http://dev.mysql.com/downloads/
+php-5.2.6.tar.gz http://www.php.net/downloads.php
+libxml2-2.6.30.tar.gz ftp://ftp.gnome.org/pub/GNOME/sources/libxml2/2.6/libxml2-2.6.30.tar.gz
+libmcrypt-2.5.8.tar.gz http://prdownloads.sourceforge.net/mcrypt/libmcrypt-2.5.8.tar.gz?use_mirror=peterhost
+zlib-1.2.3.tar.gz http://www.zlib.net/zlib-1.2.3.tar.gz
+
+Autoconf-2.61.tar.gz ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.61.tar.gz  #autoconf是 用来产生configure文件的 .configure是 一个脚本,它能设置
+源程序来适应各种不同的操作系统平台,并且根据不同的 系统来产生合适的 Makefile,从而可以使你的源代码能在不同的操作系统平台上被编译出来
+
+# 下面都是关于图片的扩展库  现在也可以不安装，后面通过  phpize动态加载
+gd-2.0.35.tar.gz http://www.libgd.org/releases/gd-2.0.35.tar.gz
+libpng-1.2.31.tar.gz ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng-1.2.31.tar.gz
+jpegsrc.v6b.tar.gz http://www.ijg.org/files/jpegsrc.v6b.tar.gz
+
+
+
+2 解压
+ tar -zxvf xxx
+ 
+3 安装
+
+*********安装libxml2最新库文件：
+cd libxml2
+./configure –prefix=/usr/local/libxml2
+Make
+Make install
+*********安装libmcrypt最新库文件
+./configure --prefix=/usr/local/libmcrypt
+ make
+make install
+*********安装zlib最新库文件
+./configure --prefix=/usr/local/zlib
+make
+make install
+*********安装libpng最新库文件
+./configure --prefix=/usr/local/libpng
+ make
+make install
+*********安装jpeg6最新库文件
+mkdir /usr/local/jpeg6            //建立jpeg6软件安装目录
+mkdir /usr/local/jpeg6/bin    //建立存放命令的目录
+mkdir /usr/local/jpeg6/lib     //创建jpeg6库文件所在目录
+mkdir /usr/local/jpeg6/include      //建立存放头文件目录
+mkdir -p /usr/local/jpeg6/man/man1 //建立存放手册的目录
+ 
+./configure  \
+> --prefix=/usr/local/jpeg6/ \             
+> --enable-shared \                     //建立共享库使用的GNU的libtool
+> --enable-static                       //建立静态库使用的GNU的libtool
+ 
+Make && make install
+*********安装freetype最新库文件
+./configure --prefix=/usr/local/freetype
+make
+make install
+*********安装autoconf最新的库文件
+./configure
+make
+make install
+*********安装最新的GD库文件
+./configure  \    //配置命令
+> --prefix=/usr/local/gd2/  \               //指定软件安装的位置
+> --with-zlib=/usr/local/zlib/  \             //指定到哪去找zlib库文件的位置
+> --with-jpeg=/usr/local/jpeg6/  \         //指定到哪去找jpeg库文件的位置
+> --with-png=/usr/local/libpng/  \         //指定到哪去找png库文件的位置
+> --with-freetype=/usr/local/freetype/       //指定到哪去找freetype 2.x字体库的位置
+ 
+Make && make install
+
+!!!!!! apache  !!!!!!
+*********安装新版本的Apache服务器
+./configure  \   //执行当前目录下软件自代的配置命令
+> --prefix=/usr/local/apache2 \       //指定Apache软件安装的位置
+> --sysconfdir=/etc/httpd  \     //指定Apache服务器的配置文件存放位置
+> --with-z=/usr/local/zlib/ \                //指定zlib库文件的位置
+> --with-included-apr  \                 //使用捆绑APR/APR-Util的副本
+> --enable-so \                          //以动态共享对象(DSO)编译
+> --enable-deflate=shared \               //缩小传输编码的支持
+> --enable-expires=shared \               //期满头控制
+> --enable-rewrite=shared \               //基于规则的URL操控
+> --enable-static-support                 //建立一个静态链接版本的支持
+ 
+make && make install
+*********测试Apache服务器
+检查安装目录
+检查配置文件目录
+ /usr/local/apache2/bin/apachectl start   
+//启动Apache
+ /usr/local/apache2/bin/apachectl stop   
+//关闭Apache
+netstat -tnl|grep 80     //查看80端口是否开启
+http://localhost/去访问Apache服务器
+
+
+添加自启动
+ echo "/usr/local/apache2/bin/apachectl start" >> /etc/rc.d/rc.local   
+
+*********安装MySQL数据库管理系统
+groupadd mysql           
+ //添加一个mysql标准组
+useradd -g mysql mysql     
+//添加mysql用户并加到mysql组中
+
+
+# ./configure  \
+> --prefix=/usr/local/mysql  \              
+> --with-extra-charsets=all                 
+make && make install
+
+
+*********配置MySQL数据库
+创建MySQL数据库服务器的配置文件
+cp support-files/my-medium.cnf /etc/my.cnf
+ bin/mysql_install_db --user=mysql 
+//创建授权表
+chown -R root  .     //将文件的所有属性改为root用户
+chown -R mysql var  //将数据目录的所有属性改为mysql用户
+chgrp -R mysql .     //将组属性改为mysql组
+/usr/local/mysql/bin/mysqld_safe --user=mysql &    启动数据库
+netstat -tnl|grep 3306     //查看3306端口是否开启
+bin/mysqladmin version   //简单的测试
+bin/mysqladmin variables       //查看所有mysql参数
+bin/mysql -u root  //没有密码可以直接登录本机服务器
+
+mysql> DELETE FROM mysql.user WHERE Host='localhost' AND User='';
+mysql> FLUSH PRIVILEGES;
+mysql> SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456');
+
+bin/mysql -u root -h localhost –p  //回车进入MySQL客户端
+bin/mysqladmin -u root –p shutdown  //关闭MySQL数据库
+
+
+*********安装最新版本的PHP模块
+./configure \               //执行当前目录下软件自代的配置命令
+> --prefix=/usr/local/php \                           //设置PHP5 的安装路径
+> --with-config-file-path=/usr/local/php/etc \            //指定PHP5配置文件存入的路径
+> --with-apxs2=/usr/local/apache2/bin/apxs \            //告诉PHP查找Apache 2的地方
+> --with-mysql=/usr/local/mysql/ \                     //指定MySQL的安装目录
+> --with-libxml-dir=/usr/local/libxml2/ \                //告诉PHP放置libxml2库的地方
+> --with-png-dir=/usr/local/libpng/ \                   //告诉PHP放置libpng库的地方
+> --with-jpeg-dir=/usr/local/jpeg6/ \                   //告诉PHP放置jpeg库的地方
+> --with-freetype-dir=/usr/local/freetype/ \             //告诉PHP放置freetype库的地方
+> --with-gd=/usr/local/gd2/ \                         //告诉PHP放置gd库的地方
+> --with-zlib-dir=/usr/local/zlib/ \                     //告诉PHP放置zlib库的地方
+> --with-mcrypt=/usr/local/libmcrypt/ \                //告诉PHP放置libmcrypt库的地方
+> --with-mysqli=/usr/local/mysql/bin/mysql_config \     //变量激活新增加的MySQLi功能
+> --enable-soap \                                   //变量激活SOAP和Web services支持
+> --enable-mbstring=all \                            //使多字节字符串支持
+> --enable-sockets                                  //变量激活socket通讯特性
+ 
+#make && make install
+*********LAMP环境整合
+
+cp php.ini-dist /usr/local/php/etc/php.ini  //创建配置文件
+
+vi /etc/httpd/httpd.conf     //使用vi编辑apache配置文件
+Addtype application/x-httpd-php .php .phtml    #添加这一条
+
+测试
+cd /usr/local/apache2/htdocs
+# vi test.php         //编辑test.php文件
+chmod 777 test.php
+<?php
+        phpinfo();
+?>
+
+在浏览器打开
