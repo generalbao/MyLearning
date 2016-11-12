@@ -1,0 +1,31 @@
+2016年11月12日16:28:19
+
+一，phpize的好处
+什么时候我们要用phpize呢？我们在安装php时：
+'./configure' '--prefix=/usr/local/php' '--with-mysql=/usr/local/mysql' '--with-zlib-dir' '--with-freetype-dir=/usr' '--with-jpeg-dir=/usr' '--with-png-dir=/usr' '--enable-gd-native-ttf' '--with-gd' '--enable-ftp' '--with-iconv' '--with-gettext' '--with-curl' '--enable-fastcgi' '--with-openssl'
+后面根的参数是我们要的模块，但是随着工作的需要，我们还要在加些模块，又不想重新编译php，这些我们就可以用phpize了。
+
+二，安装php模块
+下面我以soap安装为例子
+cd /home/zhangy/php-5.2.6/ext/soap                #ext目录下面放的是php的模块库
+/usr/local/php/bin/phpize
+#确定php-config文件在不在，调用php-config，安装后.so文件会自动放到extension_dir里面
+./configure --enable-soap  --with-php-config=/usr/local/php/bin/php-config
+make && make install
+安装完后会有这样的东西
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+Build complete.
+Don't forget to run 'make test'.
+Installing shared extensions:     /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/
+
+三，查看.so文件，以及修改php.ini
+cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613/
+ls -al |grep soap
+-rwxr-xr-x 1 root  root   763334 Feb  9 10:51 soap.so
+vi /usr/local/php/lib/php.ini
+在加载模块的地加上一行extension=soap.so
+四，重起apache
+
+thank you for you visiting
