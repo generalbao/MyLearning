@@ -1,0 +1,12 @@
+mongodb 安装与简单操作   2016年11月12日10:50:08
+
+1 下载  www.mongodb.com 我下载的是windows版本，后缀是.msi，直接点击安装，下一步就行了
+2 启动 
+            bin目录下 mongod.exe 是服务器端，   mongo.exe 是客户端
+       2.1 执行MongoDB服务器端 启动之前，我们要给mongodb指定一个文件夹(与安装好后的bin目录同级)，这里取名为”db",用来存放mongodb的数据。
+       微软徽标+R，输入cmd，首先找到“mongodb”的路径，然后运行mongod开启命令，同时用--dbpath指定数据存放地点为“db”文件夹 mongod --dbpath G:/mongodb/db
+       2.2 在浏览器打开http://localhost:27017/     27017是mongodb默认端口             
+       2.3 也可以执行MongoDB客户端  在bin目录下双击 mongo.exe
+       2.4 show dbs。。。 或者其他命令
+       
+       
