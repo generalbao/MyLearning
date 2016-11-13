@@ -26,6 +26,66 @@ b 删除数据库
  use db1
  db.dropDatabase()
 
+c 插入文档
+
+db.col1.insert({"name":"bb","age":"20","language":"php"})
+
+d 更新
+
+d1 update------   第一个参数 是条件  第二个是更新内容 第三个 是添加或者更新  第四个是一条还是全部
+db.col1.update({"name":"bao"},{ $set : {"name" : "change bao" }})   ==== update name='change bao' where name='bao' limit 1
+db.col1.update( {"name" : "bao" }, {$set " { "name" : "update bao"} }, {multi : true} )   全部更新
+
+db.col1.update( { "count" : { $gt : 4 } } , { $set : { "test5" : "OK"} },true,false );  只添加第一条：
+db.col.update( { "count" : { $gt : 5 } } , { $set : { "test5" : "OK"} },true,true );    全部添加加进去:
+
+db.col.update( { "count" : { $gt : 15 } } , { $inc : { "count" : 1} },false,true );  
+
+
+d2 save -----
+
+db.col1.save({
+	"_id" : ObjectId("56064f89ade2f21f36b03136"),
+    "title" : "MongoDB",
+    "description" : "MongoDB 是一个 Nosql 数据库",
+    "by" : "Runoob",
+    "url" : "http://www.runoob.com",
+    "tags" : [
+            "mongodb",
+            "NoSQL"
+    ],
+    "likes" : 110
+})
+
+
+e 查找
+db.col1.find()
+db.col1.find().pretty()  比较人性化显示
+db.col1.findOne()
+
+db.col1.find({ "name":"bao", "age" : "20" }).pretty()           where name='bao' and age='20'
+db.col1.find({$or : [ {"name":"bao"}, {"age" : "20"} ] }).pretty()   or
+
+f 删除
+db.col.remove({})  删除所有
+db.col.remove({ "name" : "age"  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
        
        
