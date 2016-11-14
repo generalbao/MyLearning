@@ -1,0 +1,34 @@
+centos下yum升级php版本(安装EPEL源和Remi源) 2016年11月14日11:38:28
+
+1 配置yum源
+
+追加CentOS 6.5的epel及remi源。
+  Extra Packages for Enterprise Linux (or EPEL)或者叫企业版 Linux 附加软件包，
+ 是一个由特别兴趣小组创建、维护并管理的，针对 红帽企业版 Linux(RHEL)及其衍生发行版 (比如 CentOS、 Scientific Linux)的一个高质量附加软件包项目。
+EPEL 的软件包通常不会与企业版 Linux 官方源中的软件包发生冲突，或者互相替换文件。 EPEL 与 Fedora 项目基本一致，包含完整的构建系统、升级管理器、
+镜像管理器等等。
+
+EPEL源只能作为CentOS官方源的补充，里面还都是一些系统基础的软件包， 我们要安装的php，php-fpm，mysql等软件里面还是没有，所以接下来添加另一个软件源Remi。
+
+
+安装REMI仓库之前，你首先需要启用EPEL仓库，因为REMI中的一些包依赖于EPEL。
+Remi源中的软件几乎都是最新稳定版。或许您会怀疑稳定不？放心吧， 这些都是Linux骨灰级的玩家编译好放进源里的，
+他们对于系统环境和软件编译参数的熟悉程度毋庸置疑。
+
+rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
+ rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+
+CentOS 7.0的源
+yum install epel-release
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+
+
+2 使用yum list命令查看可安装的包(Packege)。
+yum list --enablerepo=remi --enablerepo=remi-php56 | grep php
+
+3 yum源配置好了，下一步就安装PHP5.6。
+yum install --enablerepo=remi --enablerepo=remi-php56 php php-opcache php-devel 
+php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof
+
+4 用PHP命令查看版本。
+php -v 
