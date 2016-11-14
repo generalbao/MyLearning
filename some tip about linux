@@ -1,0 +1,7 @@
+linux 常用操作   2016年11月14日11:24:27
+
+1 查看centos 版本  
+  rpm -q centos-release
+
+2 查看linux内核版本
+   cat /proc/version
