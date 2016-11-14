@@ -1,0 +1,10 @@
+记录一些mysql学习   2016年11月14日11:58:49
+
+
+1 length:返回字符串所占的字节数，是计算字段的长度一个汉字是算三个字符,一个数字或字母算一个字符
+  char_length:返回字符串所占的字符数，不管汉字还是数字或者是字母都算是一个字符
+select * from user where length(name)=4        名字长度为4 汉子算三个字符
+select * from user where char_length(name)=4    
+
+2 连接
+update user set name = concat('haha',name,'haha')        name='haha'+name+'haha'
